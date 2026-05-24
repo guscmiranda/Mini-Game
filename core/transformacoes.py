@@ -7,7 +7,7 @@ def translacao(pontos, dx, dy):
     for x, y in pontos: novos.append((x + dx, y + dy))
     return novos
 
-def escalonamento (pontos, sx, sy):
+def escalonamento(pontos, sx, sy):
     novos = []
     for x, y in pontos:
         novos.append((x * sx, y * sy))
@@ -27,10 +27,7 @@ def rotacao_00 (pontos, theta):
 
 def rotacao_central(pontos, theta, dx, dy):
 
-    # Converter para radianos
     theta = math.radians(theta)
-    #dx = sum(x for x, y in pontos) / len(pontos)
-    #dy = sum(y for x, y in pontos) / len(pontos)
 
     novos = []
 
@@ -48,5 +45,17 @@ def rotacao_central(pontos, theta, dx, dy):
                 - dx * math.sin(theta)
         )
         novos.append((x_new,y_new))
+
+    return novos
+
+
+def escalonamento_central(pontos, sx, sy, cx, cy):
+    novos = []
+
+    for x, y in pontos:
+        # Subtrai o centro, aplica a escala e soma o centro de volta
+        x_new = (x - cx) * sx + cx
+        y_new = (y - cy) * sy + cy
+        novos.append((x_new, y_new))
 
     return novos
