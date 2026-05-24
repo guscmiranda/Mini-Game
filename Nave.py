@@ -1,11 +1,18 @@
 import pygame
-from main import WIDTH, HEIGHT
-from Transformacoes import *
+# from main import WIDTH, HEIGHT
+from core.transformacoes import *
 pygame.init()
+
+WIDTH = 1280
+HEIGHT = 720
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
+# nave = {
+#     'corpo': []
+#     ''
+# }
 
 # Corpo triangular
 corpo = [
@@ -109,6 +116,24 @@ while running:
         asa_dir = rotacao_central(asa_dir, 2, cx, cy)
         motor = rotacao_central(motor, 2, cx, cy)
         janela = rotacao_central(janela, 2, cx, cy)
+
+    if keys[pygame.K_f]:
+        cx, cy = janela[0]
+        v = 0.6
+        corpo = escalonamento_central(corpo, v, v, cx, cy)
+        asa_esq = escalonamento_central(asa_esq, v, v, cx, cy)
+        asa_dir = escalonamento_central(asa_dir, v, v, cx, cy)
+        motor = escalonamento_central(motor, v, v, cx, cy)
+        janela_raio *= 0.6 #escalonamento_central(janela, v, v, cx, cy)
+
+    if keys[pygame.K_g]:
+        cx, cy = janela[0]
+        v = 1.6
+        corpo = escalonamento_central(corpo, v, v, cx, cy)
+        asa_esq = escalonamento_central(asa_esq, v, v, cx, cy)
+        asa_dir = escalonamento_central(asa_dir, v, v, cx, cy)
+        motor = escalonamento_central(motor, v, v, cx, cy)
+        janela_raio *= 1.6 #escalonamento_central(janela, v, v, cx, cy)
 
     screen.fill("black")
 

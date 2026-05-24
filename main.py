@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from Transformacoes import *
+from core.transformacoes import *
 
 WIDTH = 1280
 HEIGHT = 720
