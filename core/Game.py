@@ -21,7 +21,7 @@ class Game:
         self.keys = pygame.key.get_pressed()
 
         self.player = Spaceship(spaceship_partes, spaceship_cores)
-        self.final_boss = FinalBoss(boss1_partes, boss1_cores)
+        self.final_boss = FinalBoss(boss9_partes, boss9_cores)
 
         self.enemies = []
         self.projectiles = []
@@ -44,6 +44,7 @@ class Game:
                 if (
                     self.player.time_since_last_shot >
                     self.player.cooldown_tiro
+                    and self.player.isBig
                 ):
                     projectile = self.player.shoot()
                     self.projectiles.append(projectile)
@@ -89,6 +90,14 @@ class Game:
 
     def checar_colisao(self):
         # ou verifica todos os pontos da borda ou usa o métododo raio
+
+        # player x boss
+        # player x projetil boss
+        # player x bordas
+        # player x projetil minions
+        # boss x projetil player
+
+
         pass
 
     # TODO:

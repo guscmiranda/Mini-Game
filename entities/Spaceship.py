@@ -14,6 +14,11 @@ class Spaceship(Entity):
         self.cooldown_tiro = 0.35
         self.time_since_last_shot = 0
 
+        self.isBig = True
+        self.time_since_last_mini = 0
+        self.cd_mini = 2
+        self.f_pressed = False
+
         self.mover(600, 600)
 
     def shoot(self):
@@ -52,8 +57,23 @@ class Spaceship(Entity):
         if keys[pygame.K_e]:
             self.rotacionar(180*dt)
 
+        if keys[pygame.K_f] and not self.f_pressed:
+            if self.isBig and self.time_since_last_mini > self.cd_mini:
+                self.escalar(0.5, 0.5)
+                self.isBig = False
+                self.time_since_last_mini = 0
+            elif not self.isBig:
+                self.escalar(2, 2)
+                self.isBig = True
+
+            self.f_pressed = True
+
+        if not keys[pygame.K_f]:
+            self.f_pressed = False
+
     def update(self, dt):
         self.handle_input(dt)
         self.time_since_last_shot += dt
+        self.time_since_last_mini += dt
 
 

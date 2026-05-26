@@ -63,40 +63,6 @@ class FinalBoss(Entity):
         elif self.cy < 180:
             self.vertical_direction = 1
 
-    # def olhar_para_player(self, player):
-    #
-    #     olho = self.partes["olho_externo"][0]["centro"]
-    #
-    #     dx = player.cx - olho[0]
-    #     dy = player.cy - olho[1]
-    #
-    #     distancia = math.sqrt(dx ** 2 + dy ** 2)
-    #
-    #     if distancia == 0:
-    #         return
-    #
-    #     dx /= distancia
-    #     dy /= distancia
-    #
-    #     offset = 10
-    #
-    #     self.partes["olho_interno"][0]["centro"] = (
-    #         olho[0] + dx * offset,
-    #         olho[1] + dy * offset
-    #     )
-    #
-    #     self.partes["pupila"][0] = [
-    #         (
-    #             x + dx * offset,
-    #             y + dy * offset
-    #         )
-    #         for x, y in [
-    #             (30, -55),
-    #             (24, -40),
-    #             (30, -25),
-    #             (36, -40)
-    #         ]
-    #     ]
 
     def olhar_para_player(self, player):
 
@@ -349,5 +315,4 @@ class FinalBoss(Entity):
         else:
 
             self.movimento_fantasma(dt)
-
-        # self.olhar_para_player(player)
+            self.olhar_para_player(player)

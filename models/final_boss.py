@@ -3303,15 +3303,15 @@ boss9_cores = {
         "borda": (120, 40, 0)
     },
 
-    "antena_haste": {
-        "interior": (120, 0, 0),
-        "borda": (80, 0, 0)
-    },
+    #"antena_haste": {
+       # "interior": (120, 0, 0),
+        #"borda": (80, 0, 0)
+    #},
 
-    "antena_ponta": {
-        "interior": (180, 40, 40),
-        "borda": (110, 0, 0)
-    },
+    #"antena_ponta": {
+      #  "interior": (180, 40, 40),
+       # "borda": (110, 0, 0)
+    #},
 
     "pescoco": {
         "interior": (80, 80, 80),
@@ -3499,15 +3499,15 @@ boss9_partes = {
         "polygon"
     ],
 
-    "antena_haste": [
-        [(-2, -250), (2, -250), (2, -275), (-2, -275)],
-        "polygon"
-    ],
+    #"antena_haste": [
+     #   [(-2, -250), (2, -250), (2, -275), (-2, -275)],
+      #  "polygon"
+    #],
 
-    "antena_ponta": [
-        [(0, -292), (10, -275), (0, -258), (-10, -275)],
-        "polygon"
-    ],
+    #"antena_ponta": [
+    #    [(0, -292), (10, -275), (0, -258), (-10, -275)],
+     #   "polygon"
+   # ],
 
     "pescoco": [
         [(-10, -100), (45, -92), (35, -75), (-18, -82)],
