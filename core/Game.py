@@ -2,9 +2,12 @@ import pygame
 
 from GameStates import GameState
 from entities.Spaceship import Spaceship
+from entities.FinalBoss import FinalBoss
 from models.spaceship_ray import *
 from models.final_boss import  *
 from models.spaceship import *
+
+
 
 WIDTH = 1280
 
@@ -18,6 +21,8 @@ class Game:
         self.keys = pygame.key.get_pressed()
 
         self.player = Spaceship(spaceship_partes, spaceship_cores)
+        self.final_boss = FinalBoss(boss1_partes, boss1_cores)
+
         self.enemies = []
         self.projectiles = []
 
@@ -40,7 +45,6 @@ class Game:
                     self.player.time_since_last_shot >
                     self.player.cooldown_tiro
                 ):
-                    print("criou tiro")
                     projectile = self.player.shoot()
                     self.projectiles.append(projectile)
                     self.player.time_since_last_shot = 0
@@ -52,11 +56,13 @@ class Game:
         #--- Player
         self.player.draw(self.screen)
 
-        #--- Tiros
+        #--- Tiros do player
         for projectile in self.projectiles:
-            # print(projectile)
             projectile.draw(self.screen)
-            # print("desenhou um tiro")
+
+        #--- Final Boss
+        self.final_boss.draw(self.screen)
+
         # chama inimidors.draw() num for de inimigos
         # chama tiros.draw() num for de tiros ainda na tela
 
@@ -65,7 +71,7 @@ class Game:
         # --- Player
         self.player.update(dt)
 
-        #--- Tiros
+        #--- Tiros do player
         for projectile in self.projectiles:
             projectile.update(dt)
 
@@ -73,6 +79,9 @@ class Game:
             p for p in self.projectiles
             if p.alive
         ]
+
+        #--- Final Boss
+        self.final_boss.update(dt, self.player)
 
     def draw_game_over(self):
         self.screen.fill((50,0,0))
