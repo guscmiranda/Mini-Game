@@ -4,12 +4,13 @@ import math
 
 class FinalBoss(Entity):
 
-    def __init__(self, partes, cores, centro=(0,0)):
+    def __init__(self, partes, cores, centro=(0,0), partes_criticas=[]):
 
         super().__init__(
             copy.deepcopy(partes),
             copy.deepcopy(cores),
-            centro
+            centro,
+            partes_criticas
         )
 
         self.vida = 200

@@ -20,8 +20,8 @@ class Game:
         self.running = True
         self.keys = pygame.key.get_pressed()
 
-        self.player = Spaceship(spaceship_partes, spaceship_cores)
-        self.final_boss = FinalBoss(boss9_partes, boss9_cores)
+        self.player = Spaceship(spaceship_partes, spaceship_cores, centro=(0,0), partes_criticas=["corpo"])
+        self.final_boss = FinalBoss(boss9_partes, boss9_cores, centro=(0,0), partes_criticas=["cabeca", "tronco"])
 
         self.enemies = []
         self.projectiles = []
@@ -46,7 +46,7 @@ class Game:
                     self.player.cooldown_tiro
                     and self.player.isBig
                 ):
-                    projectile = self.player.shoot()
+                    projectile = self.player.shoot(["corpo"])
                     self.projectiles.append(projectile)
                     self.player.time_since_last_shot = 0
 
@@ -55,14 +55,14 @@ class Game:
         self.screen.fill("black")
 
         #--- Player
-        self.player.draw(self.screen)
+        self.player.draw(self.screen, True)
 
         #--- Tiros do player
         for projectile in self.projectiles:
-            projectile.draw(self.screen)
+            projectile.draw(self.screen, True)
 
         #--- Final Boss
-        self.final_boss.draw(self.screen)
+        self.final_boss.draw(self.screen, True)
 
         # chama inimidors.draw() num for de inimigos
         # chama tiros.draw() num for de tiros ainda na tela
@@ -92,6 +92,11 @@ class Game:
         # ou verifica todos os pontos da borda ou usa o métododo raio
 
         # player x boss
+        player_hitbox = self.player.hitboxes
+        boss_hitbox = self.final_boss.hitboxes
+
+        # distMin = player_hitbox.raio + boss_hitbox.raio
+        # math.hupot()
         # player x projetil boss
         # player x bordas
         # player x projetil minions

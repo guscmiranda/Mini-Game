@@ -5,8 +5,8 @@ import pygame
 import math
 
 class Spaceship(Entity):
-    def __init__(self, partes, cores,  centro=(0, 0)):
-        super().__init__(partes, cores, centro)
+    def __init__(self, partes, cores,  centro=(0, 0), partes_criticas=[]):
+        super().__init__(partes, cores, centro, partes_criticas)
 
         self.velocidade = 300
         self.vidas = 3 # TODO: a decidir
@@ -21,7 +21,7 @@ class Spaceship(Entity):
 
         self.mover(600, 600)
 
-    def shoot(self):
+    def shoot(self, partes_criticas):
 
         rad = math.radians(self.angulo)
 
@@ -35,7 +35,8 @@ class Spaceship(Entity):
             tiro_cores,
             x,
             y,
-            self.angulo
+            self.angulo,
+            partes_criticas
         )
         return tiro
 

@@ -4,8 +4,8 @@ import math
 
 class Projectile(Entity):
 
-    def __init__(self, partes, cores, x, y, angulo):
-        super().__init__(copy.deepcopy(partes), copy.deepcopy(cores), (x,y))
+    def __init__(self, partes, cores, x, y, angulo, partes_criticas=[]):
+        super().__init__(copy.deepcopy(partes), copy.deepcopy(cores), (x,y), partes_criticas)
 
         self.velocidade = 500
         self.alive = True
