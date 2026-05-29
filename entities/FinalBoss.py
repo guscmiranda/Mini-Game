@@ -32,6 +32,14 @@ class FinalBoss(Entity):
         # direção vertical
         self.vertical_direction = 1
 
+        # tiro comum
+        self.time_since_last_shot = 0
+        self.cd_shoot = 0.52
+
+        # parede
+        self.time_since_last_parede = 0
+        self.cd_parede = 6.0
+
     def entrada(self, dt):
 
         alvo_x = 1000
@@ -63,7 +71,6 @@ class FinalBoss(Entity):
 
         elif self.cy < 180:
             self.vertical_direction = 1
-
 
     def olhar_para_player(self, player):
 
@@ -308,9 +315,9 @@ class FinalBoss(Entity):
             ]
 
     def update(self, dt, player):
+        if self.vida <= 0: self.alive = False
 
         if self.entering:
-
             self.entrada(dt)
 
         else:
