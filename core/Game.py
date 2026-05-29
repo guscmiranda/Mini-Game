@@ -8,7 +8,10 @@ from models.final_boss import  *
 from models.spaceship import *
 # from models.boss_teste import *
 from models.parede_laser import *
+from models.background import *
 from entities.ParedeLaser import ParedeLaser
+from entities.Entity import Entity
+
 import random
 import math
 
@@ -28,7 +31,8 @@ class Game:
 
         self.player = Spaceship(spaceship_partes, spaceship_cores, centro=(0,0), partes_criticas=["corpo"])
         self.final_boss = FinalBoss(boss9_partes, boss9_cores, centro=(0,0), partes_criticas=["cabeca", "tronco"])
-
+        self.background = Entity(bg_atmosfera_partes, bg_atmosfera_cores, centro=(WIDTH / 2, 720 / 2),
+                                 partes_criticas=[])
         self.enemies = []
         self.p_projectiles = []
         self.b_projectiles = []
@@ -61,6 +65,7 @@ class Game:
 
     def draw_playing(self):
         self.screen.fill("black")
+        self.background.draw(self.screen)
 
         #--- Player
         #if self.player.alive:
