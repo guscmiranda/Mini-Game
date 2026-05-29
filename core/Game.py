@@ -6,7 +6,7 @@ from entities.FinalBoss import FinalBoss
 from models.spaceship_ray import *
 from models.final_boss import  *
 from models.spaceship import *
-from models.boss_teste import *
+# from models.boss_teste import *
 from models.parede_laser import *
 from entities.ParedeLaser import ParedeLaser
 import random
@@ -63,7 +63,8 @@ class Game:
         self.screen.fill("black")
 
         #--- Player
-        self.player.draw(self.screen, True)
+        #if self.player.alive:
+        self.player.draw(self.screen)
 
         #--- Tiros do player
         for projectile in self.p_projectiles:
@@ -87,6 +88,9 @@ class Game:
         # chama tiros.draw() num for de tiros ainda na tela
 
     def update_playing(self, dt):
+
+        if not self.player.alive: self.state = GameState.GAME_OVER
+        if not self.final_boss.alive: self.state = GameState.GAME_WIN
 
         # --- Player
         self.player.update(dt)
@@ -175,11 +179,19 @@ class Game:
         self.screen.blit(texto_go, rect_go)
         self.screen.blit(texto_restart, rect_restart)
 
-    def checar_colisao(self):
+    def verificar_colisao(self, hitbox1, hitbox2):
+
+        dist_min = hitbox1["raio"] + hitbox2["raio"]
+        real_dist = math.hypot(hitbox1["centro"][0] - hitbox2["centro"][0],
+                              hitbox1["centro"][1] - hitbox2["centro"][1])
+
+        return dist_min > real_dist
+
+    def tratar_colisao(self):
         # ou verifica todos os pontos da borda ou usa o métododo raio
 
-        # player x boss
-        player_hitbox = self.player.hitboxes
+
+        player_hitbox = self.player.hitboxes[0]
         boss_hitbox = self.final_boss.hitboxes
         #player_projectiles = [p.hitboxes for p in self.p_projectiles]
 

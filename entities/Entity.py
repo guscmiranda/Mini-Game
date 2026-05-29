@@ -38,6 +38,8 @@ class Entity:
         self.cores = copy.deepcopy(cores)
         self.cx, self.cy = centro
         self.angulo = 0
+        self.alive = True
+        #self.vidas = vida_max
 
         self.hitboxes = []
         for nome in partes_criticas:

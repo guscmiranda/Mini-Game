@@ -8,7 +8,7 @@ class Projectile(Entity):
         super().__init__(copy.deepcopy(partes), copy.deepcopy(cores), (x,y), partes_criticas)
 
         self.velocidade = 500
-        self.alive = True
+        # self.alive = True
         self.angulo = angulo
         self.mover(x, y)
 

@@ -1,6 +1,8 @@
 from entities.Entity import Entity
+from entities.Projectile import Projectile
 import copy
 import math
+from models.final_boss_ray import *
 
 class FinalBoss(Entity):
 
@@ -16,8 +18,6 @@ class FinalBoss(Entity):
         self.vida = 200
 
         self.velocidade = 100
-
-        self.alive = True
 
         # começa fora da tela
         self.mover(1600, 300)
@@ -314,6 +314,35 @@ class FinalBoss(Entity):
                 )
             ]
 
+    def shoot(self, partes_criticas, player):
+
+        dx = player.cx - self.cx
+        dy = player.cy - self.cy
+
+        angulo = math.degrees(
+            math.atan2(dx, -dy)
+        )
+
+        offset = 100
+
+        rad = math.radians(angulo)
+
+        x = self.cx + math.sin(rad) * offset
+        y = self.cy - math.cos(rad) * offset
+
+        tiro = Projectile(
+            demon_fireball_partes,
+            demon_fireball_cores,
+            x,
+            y,
+            angulo,
+            partes_criticas
+        )
+
+        self.time_since_last_shot = 0
+
+        return tiro
+
     def update(self, dt, player):
         if self.vida <= 0: self.alive = False
 
@@ -321,6 +350,6 @@ class FinalBoss(Entity):
             self.entrada(dt)
 
         else:
-
+            self.time_since_last_shot += dt
             self.movimento_fantasma(dt)
             self.olhar_para_player(player)
