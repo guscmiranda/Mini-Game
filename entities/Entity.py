@@ -5,6 +5,7 @@ from core.transformacoes import (
     escalonamento_central
 )
 import math
+import copy
 
 def gerar_circulo_envolvente(pontos):
     min_x = min(p[0] for p in pontos)
@@ -33,8 +34,8 @@ class Entity:
         centro = ponto central da entidade
         """
 
-        self.partes = partes
-        self.cores = cores
+        self.partes = copy.deepcopy(partes)
+        self.cores = copy.deepcopy(cores)
         self.cx, self.cy = centro
         self.angulo = 0
 
@@ -135,6 +136,7 @@ class Entity:
             hb["raio"] *= (sx + sy) / 2
 
     def draw(self, screen, ver_hitboxes=False):
+        if not self.alive: return
 
         for nome, parte in self.partes.items():
 
