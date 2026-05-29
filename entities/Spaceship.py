@@ -9,7 +9,7 @@ class Spaceship(Entity):
         super().__init__(partes, cores, centro, partes_criticas)
 
         self.velocidade = 300
-        self.vidas = 3 # TODO: a decidir
+        self.vidas = 1
 
         self.cooldown_tiro = 0.35
         self.time_since_last_shot = 0
@@ -73,6 +73,9 @@ class Spaceship(Entity):
             self.f_pressed = False
 
     def update(self, dt):
+
+        if self.vidas <= 0: self.alive = False
+
         self.handle_input(dt)
         self.time_since_last_shot += dt
         self.time_since_last_mini += dt
