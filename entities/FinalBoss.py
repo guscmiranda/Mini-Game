@@ -34,7 +34,7 @@ class FinalBoss(Entity):
 
         # tiro comum
         self.time_since_last_shot = 0
-        self.cd_shoot = 0.86
+        self.cd_shoot = 0.82
 
         # parede
         self.time_since_last_parede = 0

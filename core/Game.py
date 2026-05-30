@@ -46,7 +46,7 @@ class Game:
         self.bombs = []
 
         self.bomb_timer = 0
-        self.bomb_cooldown = 8
+        self.bomb_cooldown = 2
         self.bombas_livres = True
 
         self.fase_atual = 1
@@ -163,14 +163,15 @@ class Game:
         # --- Controle de Tempo e Transições de Fase
         self.tempo_fase += dt
 
-        if self.fase_atual == 1 and self.tempo_fase > 15:
+        if self.fase_atual == 1 and self.tempo_fase > 5:
             self.fase_atual = 2
             self.audio.play_music("fase-2")
+            self.bomb_cooldown = 8
             self.state = GameState.TRANSITION
             self.tempo_transicao = 2.5
             self.texto_transicao = "AVISO: BOSS DETECTADO!"
 
-        if self.fase_atual == 2 and self.final_boss.vida <= 100:
+        if self.fase_atual == 2 and self.final_boss.vida <= 190:
             self.fase_atual = 3
             self.audio.play_music("fase-3")
             self.state = GameState.TRANSITION
@@ -222,7 +223,7 @@ class Game:
         # --- LÓGICA DA FASE 3
         if self.fase_atual == 3 and self.final_boss.alive:
              self.final_boss.time_since_last_parede += dt
-             self.final_boss.cd_shoot += 0.2 #tiros mais devagar agora q tem parede
+             self.final_boss.cd_shoot = 1 #tiros mais devagar agora q tem parede
              if self.final_boss.time_since_last_parede > self.final_boss.cd_parede:
                  # Sorteia a altura do buraco (y) para não ser sempre no meio
                  # A tela tem 720, então o centro do buraco fica entre 150 e 570
@@ -342,7 +343,7 @@ class Game:
                     # boss toma dano
                     # distroi projetil
                     p_proj.alive = False
-                    self.final_boss.vida -= 50
+                    self.final_boss.vida -= 2
                     print("colisao projetil do player com boss")
 
 

@@ -17,7 +17,7 @@ class Bomb(Entity):
 
         self.vida = 1
 
-        self.velocidade = 100
+        self.velocidade = 170
 
         self.bomb_timer = 0
         self.bomb_cooldown = 8
