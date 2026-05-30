@@ -28,6 +28,7 @@ class AudioManager:
         if music_name in self.musics and music_name != self.musica_atual:
             try:
                 pygame.mixer.music.load(self.musics[music_name])
+                pygame.mixer.music.stop()
                 pygame.mixer.music.play(loop)
                 self.musica_atual = music_name
                 pygame.mixer.music.set_volume(0.008)

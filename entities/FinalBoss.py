@@ -6,14 +6,13 @@ from models.final_boss_ray import *
 
 class FinalBoss(Entity):
 
-    def __init__(self, partes, cores, centro=(0,0), partes_criticas=[], lives=200):
+    def __init__(self, partes, cores, centro=(0,0), partes_criticas=[]):
 
         super().__init__(
             copy.deepcopy(partes),
             copy.deepcopy(cores),
             centro,
             partes_criticas,
-            lives=lives
         )
 
         self.vida = 200

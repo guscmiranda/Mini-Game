@@ -43,8 +43,8 @@ class Game:
         self.p_projectiles = []
         self.b_projectiles = []
         self.paredes = []
-
         self.bombs = []
+
         self.bomb_timer = 0
         self.bomb_cooldown = 8
         self.bombas_livres = True
@@ -88,22 +88,23 @@ class Game:
 
         #--- Player
         #if self.player.alive:
-        self.player.draw(self.screen, True)
+        self.player.draw(self.screen)
 
         #--- Tiros do player
         for projectile in self.p_projectiles:
-            projectile.draw(self.screen, True)
+            projectile.draw(self.screen)
 
         # Tiros do Boss
         for projectile in self.b_projectiles:
-            projectile.draw(self.screen, True)
+            projectile.draw(self.screen)
 
         #--- Final Boss
-        self.final_boss.draw(self.screen, True)
+        if self.final_boss.alive:
+            self.final_boss.draw(self.screen)
 
         #--- Paredes
         for parede in self.paredes:
-            parede.draw(self.screen, True)
+            parede.draw(self.screen)
 
         #--- Bombas
         for bomb in self.bombs:
@@ -221,6 +222,7 @@ class Game:
         # --- LÓGICA DA FASE 3
         if self.fase_atual == 3 and self.final_boss.alive:
              self.final_boss.time_since_last_parede += dt
+             self.final_boss.cd_shoot += 0.2 #tiros mais devagar agora q tem parede
              if self.final_boss.time_since_last_parede > self.final_boss.cd_parede:
                  # Sorteia a altura do buraco (y) para não ser sempre no meio
                  # A tela tem 720, então o centro do buraco fica entre 150 e 570
@@ -328,9 +330,9 @@ class Game:
         for b_hitbox in boss_hitbox:
             if self.verificar_colisao(player_hitbox, b_hitbox):
                 # player toma dano
-                self.player.vidas -= 1
-                # cd de dano
-                print("colisao no player")
+                if self.player.time_since_last_damage > self.player.cooldown_damage:
+                    self.player.vidas -= 1
+                    self.player.time_since_last_damage = 0
 
         # boss x projetil player
         for p_proj in self.p_projectiles:
@@ -340,9 +342,8 @@ class Game:
                     # boss toma dano
                     # distroi projetil
                     p_proj.alive = False
-                    self.final_boss.vida -= 2
-
-                    print("colisao projetil com boss")
+                    self.final_boss.vida -= 50
+                    print("colisao projetil do player com boss")
 
 
         # player x projetil boss
@@ -352,16 +353,21 @@ class Game:
                 # boss toma dano
                 # distroi projetil
                 b_proj.alive = False
-                self.player.vidas -= 1
+                if self.player.time_since_last_damage > self.player.cooldown_damage:
+                    print("ficou invulnerável")
+                    self.player.vidas -= 1
+                    self.player.time_since_last_damage = 0
 
-                print("colisao projetil com boss")
+                    print("colisao projetil com boss")
 
         # player x paredes
         for parede in self.paredes:
             for p_hitbox in parede.hitboxes:
                 if self.verificar_colisao(player_hitbox, p_hitbox):
-                    print("COLISÃO COM A PAREDE LASER!")
-                    self.player.vidas -= 1
+                    if self.player.time_since_last_damage > self.player.cooldown_damage:
+                        print("COLISÃO COM A PAREDE LASER!")
+                        self.player.vidas -= 1
+                        self.player.time_since_last_damage = 0
 
         # player x bombas
         for bomb in self.bombs:

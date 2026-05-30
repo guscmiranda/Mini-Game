@@ -10,10 +10,13 @@ class Spaceship(Entity):
         super().__init__(partes, cores, centro, partes_criticas)
 
         self.velocidade = 300
-        self.vidas = 3
+        self.vidas = 200
 
         self.cooldown_tiro = 0.35
         self.time_since_last_shot = 0
+
+        self.cooldown_damage = 0.5
+        self.time_since_last_damage = 0
 
         self.heart_partes = heart_partes
         self.heart_cores = heart_cores
@@ -83,5 +86,6 @@ class Spaceship(Entity):
         self.handle_input(dt)
         self.time_since_last_shot += dt
         self.time_since_last_mini += dt
+        self.time_since_last_damage += dt
 
 
