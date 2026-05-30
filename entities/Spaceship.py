@@ -1,6 +1,7 @@
 from entities.Entity import Entity
 from entities.Projectile import Projectile
 from models.spaceship_ray import *
+from models.player_lives import *
 import pygame
 import math
 
@@ -13,6 +14,9 @@ class Spaceship(Entity):
 
         self.cooldown_tiro = 0.35
         self.time_since_last_shot = 0
+
+        self.heart_partes = heart_partes
+        self.heart_cores = heart_cores
 
         self.isBig = True
         self.time_since_last_mini = 0

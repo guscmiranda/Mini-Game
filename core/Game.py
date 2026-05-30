@@ -80,28 +80,56 @@ class Game:
 
         #--- Player
         #if self.player.alive:
-        self.player.draw(self.screen)
+        self.player.draw(self.screen, True)
 
         #--- Tiros do player
         for projectile in self.p_projectiles:
-            projectile.draw(self.screen)
+            projectile.draw(self.screen, True)
 
         # Tiros do Boss
         for projectile in self.b_projectiles:
-            projectile.draw(self.screen)
+            projectile.draw(self.screen, True)
 
         #--- Final Boss
-        self.final_boss.draw(self.screen)
+        self.final_boss.draw(self.screen, True)
 
-        #---- Paredes
+        #--- Paredes
         for parede in self.paredes:
-            parede.draw(self.screen)
+            parede.draw(self.screen, True)
 
+        #--- Bombas
+        for bomb in self.bombs:
+            bomb.draw(self.screen)
 
-
+        #--- Vidas do jogador
+        self.draw_hud()
 
         # chama inimidors.draw() num for de inimigos
         # chama tiros.draw() num for de tiros ainda na tela
+
+    def draw_hud(self):
+        x_inicial = 30
+        y_inicial = 690
+        espacamento = 50
+        tamanho_pixel = 2
+
+        for i in range(self.player.vidas):
+            if i > 10: break
+
+            x_offset = x_inicial + (i * espacamento)
+
+            for nome_parte, (pontos, tipo) in self.player.heart_partes.items():
+                cor = self.player.heart_cores[nome_parte]["interior"]
+
+                if tipo == "polygon":
+                    pontos_tela = [(p[0] * tamanho_pixel + x_offset,
+                                    p[1] * tamanho_pixel + y_inicial) for p in pontos]
+                    pygame.draw.polygon(self.screen, cor, pontos_tela)
+
+                elif tipo == "circle":
+                    centro = (pontos["centro"][0] * tamanho_pixel + x_offset,
+                              pontos["centro"][1] * tamanho_pixel + y_inicial)
+                    pygame.draw.circle(self.screen, cor, centro, pontos["raio"] * tamanho_pixel)
 
     def update_playing(self, dt):
 
@@ -163,29 +191,28 @@ class Game:
 
         # Cria paredes
         # --- Gerador de Paredes do Boss ---
-        # if self.final_boss.alive:
-        #     self.final_boss.time_since_last_parede += dt
-        #     if self.final_boss.time_since_last_parede > self.final_boss.cd_parede:
-        #         # Sorteia a altura do buraco (y) para não ser sempre no meio
-        #         # A tela tem 720, então o centro do buraco fica entre 150 e 570
-        #         gap_y = random.randint(150, 570)
-        #
-        #         # Cria a parede fora da tela (X = 1350)
-        #         nova_parede = ParedeLaser(
-        #             parede_partes,
-        #             parede_cores,
-        #             centro=(1350, gap_y),
-        #             partes_criticas=partes_criticas_parede
-        #         )
-        #         self.paredes.append(nova_parede)
-        #         self.final_boss.time_since_last_parede = 0
+        if self.final_boss.alive:
+             self.final_boss.time_since_last_parede += dt
+             if self.final_boss.time_since_last_parede > self.final_boss.cd_parede:
+                 # Sorteia a altura do buraco (y) para não ser sempre no meio
+                 # A tela tem 720, então o centro do buraco fica entre 150 e 570
+                 gap_y = random.randint(150, 570)
+
+                 # Cria a parede fora da tela (X = 1350)
+                 nova_parede = ParedeLaser(
+                     parede_partes,
+                     parede_cores,
+                     centro=(1350, gap_y),
+                     partes_criticas=partes_criticas_parede
+                 )
+                 self.paredes.append(nova_parede)
+                 self.final_boss.time_since_last_parede = 0
 
         # Atualiza e limpa paredes mortas
         for parede in self.paredes:
             parede.update(dt)
 
         self.paredes = [p for p in self.paredes if p.alive]
-
 
     def draw_game_over(self):
 
@@ -270,14 +297,6 @@ class Game:
                     self.player.vidas -= 1
 
         # player x projetil minions
-
-
-
-    # TODO:
-    #  lidar com eventos
-    #  gerar updates em tudo
-    #  desenhar
-    #  lupar as coisas nisso
 
     def run(self):
         while self.running:

@@ -27,7 +27,7 @@ def gerar_circulo_envolvente(pontos):
 
 class Entity:
 
-    def __init__(self, partes, cores, centro=(0, 0), partes_criticas=[]):
+    def __init__(self, partes, cores, centro=(0, 0), partes_criticas=[], lives=3):
         """
         partes = dicionário de partes da entidade
         cores = dicionário de cores das partes
@@ -37,6 +37,7 @@ class Entity:
         self.partes = copy.deepcopy(partes)
         self.cores = copy.deepcopy(cores)
         self.cx, self.cy = centro
+        self.lives = lives
         self.angulo = 0
         self.alive = True
         #self.vidas = vida_max
@@ -72,6 +73,9 @@ class Entity:
 
         self.cx += dx
         self.cy += dy
+
+    def get_damage(self, damage):
+        self.lives -= damage
 
     def rotacionar(self, angulo):
         self.angulo += angulo
