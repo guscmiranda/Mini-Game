@@ -44,7 +44,7 @@ class Game:
 
         self.audio.play_music("fase-2")
 
-    def hadle_events(self):
+    def handle_events(self):
         self.keys = pygame.key.get_pressed()
 
         for event in pygame.event.get():
@@ -258,7 +258,7 @@ class Game:
     def run(self):
         while self.running:
             dt = self.clock.tick(60) / 1000
-            self.hadle_events()
+            self.handle_events()
 
             if self.state == GameState.IN_GAME:
                 self.update_playing(dt)
