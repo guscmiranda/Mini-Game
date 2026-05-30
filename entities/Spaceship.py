@@ -9,7 +9,7 @@ class Spaceship(Entity):
         super().__init__(partes, cores, centro, partes_criticas)
 
         self.velocidade = 300
-        self.vidas = 1
+        self.vidas = 3
 
         self.cooldown_tiro = 0.35
         self.time_since_last_shot = 0
