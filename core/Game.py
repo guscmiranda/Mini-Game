@@ -11,6 +11,8 @@ from models.parede_laser import *
 from models.background import *
 from entities.ParedeLaser import ParedeLaser
 from entities.Entity import Entity
+from core.AudioManager import AudioManager
+from core.BackgroundManager import BackgroundManager
 
 import random
 import math
@@ -20,24 +22,27 @@ WIDTH = 1280
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1280, 720))
+        self.screen = pygame.display.set_mode((WIDTH, 720))
         self.clock = pygame.time.Clock()
-        self.state = GameState.IN_GAME
-        self.running = True
         self.keys = pygame.key.get_pressed()
-
         self.fonte_titulo = pygame.font.SysFont('arial', 100, bold=True)
         self.fonte_subtitulo = pygame.font.SysFont('arial', 40)
 
+        self.state = GameState.IN_GAME
+        self.running = True
+
+        self.audio = AudioManager()
+        self.background = BackgroundManager("../assets/image/dark_montains.png", "../assets/image/dark_montains_cont.png")
         self.player = Spaceship(spaceship_partes, spaceship_cores, centro=(0,0), partes_criticas=["corpo"])
         self.final_boss = FinalBoss(boss9_partes, boss9_cores, centro=(0,0), partes_criticas=["cabeca", "tronco"])
-        self.background = Entity(bg_atmosfera_partes, bg_atmosfera_cores, centro=(WIDTH / 2, 720 / 2),
-                                 partes_criticas=[])
+       # self.background = Entity(bg_atmosfera_partes, bg_atmosfera_cores, centro=(WIDTH / 2, 720 / 2), partes_criticas=[])
+
         self.enemies = []
         self.p_projectiles = []
         self.b_projectiles = []
         self.paredes = []
 
+        self.audio.play_music("fase-2")
 
     def hadle_events(self):
         self.keys = pygame.key.get_pressed()
@@ -97,6 +102,9 @@ class Game:
         if not self.player.alive: self.state = GameState.GAME_OVER
         if not self.final_boss.alive: self.state = GameState.GAME_WIN
 
+        # --- Background
+        self.background.update(dt)
+
         # --- Player
         self.player.update(dt)
 
@@ -131,30 +139,28 @@ class Game:
 
         # Cria paredes
         # --- Gerador de Paredes do Boss ---
-        if self.final_boss.alive:
-            self.final_boss.time_since_last_parede += dt
-            if self.final_boss.time_since_last_parede > self.final_boss.cd_parede:
-                # Sorteia a altura do buraco (y) para não ser sempre no meio
-                # A tela tem 720, então o centro do buraco fica entre 150 e 570
-                gap_y = random.randint(150, 570)
-
-                # Cria a parede fora da tela (X = 1350)
-                nova_parede = ParedeLaser(
-                    parede_partes,
-                    parede_cores,
-                    centro=(1350, gap_y),
-                    partes_criticas=partes_criticas_parede
-                )
-                self.paredes.append(nova_parede)
-                self.final_boss.time_since_last_parede = 0
+        # if self.final_boss.alive:
+        #     self.final_boss.time_since_last_parede += dt
+        #     if self.final_boss.time_since_last_parede > self.final_boss.cd_parede:
+        #         # Sorteia a altura do buraco (y) para não ser sempre no meio
+        #         # A tela tem 720, então o centro do buraco fica entre 150 e 570
+        #         gap_y = random.randint(150, 570)
+        #
+        #         # Cria a parede fora da tela (X = 1350)
+        #         nova_parede = ParedeLaser(
+        #             parede_partes,
+        #             parede_cores,
+        #             centro=(1350, gap_y),
+        #             partes_criticas=partes_criticas_parede
+        #         )
+        #         self.paredes.append(nova_parede)
+        #         self.final_boss.time_since_last_parede = 0
 
         # Atualiza e limpa paredes mortas
         for parede in self.paredes:
             parede.update(dt)
 
         self.paredes = [p for p in self.paredes if p.alive]
-
-
 
 
     def draw_game_over(self):
@@ -216,7 +222,7 @@ class Game:
                     # boss toma dano
                     # distroi projetil
                     p_proj.alive = False
-                    self.final_boss.vida -= 5
+                    self.final_boss.vida -= 2
 
                     print("colisao projetil com boss")
 
