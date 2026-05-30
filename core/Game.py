@@ -13,6 +13,8 @@ from entities.ParedeLaser import ParedeLaser
 from entities.Entity import Entity
 from core.AudioManager import AudioManager
 from core.BackgroundManager import BackgroundManager
+from models.bomb import *
+from entities.Bomb import Bomb
 
 import random
 import math
@@ -42,7 +44,11 @@ class Game:
         self.b_projectiles = []
         self.paredes = []
 
-        self.audio.play_music("fase-2")
+        self.bombs = []
+        self.bomb_timer = 0
+        self.bomb_cooldown = 8
+
+        self.audio.play_music("fase-1")
 
     def handle_events(self):
         self.keys = pygame.key.get_pressed()
@@ -133,6 +139,24 @@ class Game:
         if self.final_boss.time_since_last_shot > self.final_boss.cd_shoot:
             projectile = self.final_boss.shoot(["fogo_interno"], self.player)
             self.b_projectiles.append(projectile)
+
+        self.bomb_timer += dt
+
+        if self.bomb_timer >= self.bomb_cooldown:
+            bomb = Bomb(
+                bomba_partes,
+                bomba_cores
+            )
+            self.bombs.append(bomb)
+            self.bomb_timer = 0
+
+        for bomb in self.bombs:
+            bomb.update(dt, self.player)
+
+        self.bombs = [
+            bomb for bomb in self.bombs
+            if bomb.alive
+        ]
 
         # Checa colisão
         self.tratar_colisao()
