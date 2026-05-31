@@ -10,7 +10,7 @@ class Spaceship(Entity):
         super().__init__(partes, cores, centro, partes_criticas)
 
         self.velocidade = 300
-        self.vidas = 3
+        self.vidas = 5
 
         self.cooldown_tiro = 0.35
         self.time_since_last_shot = 0
@@ -61,9 +61,9 @@ class Spaceship(Entity):
             self.mover(velocidade, 0)
 
         if keys[pygame.K_q]:
-            self.rotacionar(-180*dt)
+            self.rotacionar(-200*dt)
         if keys[pygame.K_e]:
-            self.rotacionar(180*dt)
+            self.rotacionar(200*dt)
 
         if keys[pygame.K_f] and not self.f_pressed:
             if self.isBig and self.time_since_last_mini > self.cd_mini:

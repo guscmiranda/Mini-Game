@@ -163,7 +163,7 @@ class Game:
         # --- Controle de Tempo e Transições de Fase
         self.tempo_fase += dt
 
-        if self.fase_atual == 1 and self.tempo_fase > 5:
+        if self.fase_atual == 1 and self.tempo_fase > 20:
             self.fase_atual = 2
             self.audio.play_music("fase-2")
             self.bomb_cooldown = 8
@@ -171,11 +171,11 @@ class Game:
             self.tempo_transicao = 2.5
             self.texto_transicao = "AVISO: BOSS DETECTADO!"
 
-        if self.fase_atual == 2 and self.final_boss.vida <= 190:
+        if self.fase_atual == 2 and self.final_boss.vida <= 100:
             self.fase_atual = 3
             self.audio.play_music("fase-3")
             self.state = GameState.TRANSITION
-            self.tempo_transicao = 2.5
+            self.tempo_transicao = 1.2
             self.texto_transicao = "ALERTA: PAREDES LASER ATIVADAS!"
 
         # --- LÓGICA DA FASE 1 (E SUPERIORES)
@@ -203,7 +203,7 @@ class Game:
         # --- LÓGICA DA FASE 2 (E SUPERIORES)
         if self.fase_atual >= 2 and self.final_boss.alive:
 
-            self.bombas_livres = False # Só vem de tras de boss
+            # self.bombas_livres = False # Só vem de tras de boss
             # --- Final Boss
             self.final_boss.update(dt, self.player)
             if self.final_boss.time_since_last_shot > self.final_boss.cd_shoot:
