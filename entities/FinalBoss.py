@@ -40,7 +40,7 @@ class FinalBoss(Entity):
         self.time_since_last_parede = 0
         self.cd_parede = 6.0
 
-    def entrada(self, dt):
+    def entrada(self, dt): # Entrada dramática do boss
 
         alvo_x = 1000
 
@@ -54,7 +54,7 @@ class FinalBoss(Entity):
         else:
             self.entering = False
 
-    def movimento_fantasma(self, dt):
+    def movimento_fantasma(self, dt): # O boss se move para cima e para baixo
 
         velocidade_y = 120
 
@@ -72,7 +72,7 @@ class FinalBoss(Entity):
         elif self.cy < 180:
             self.vertical_direction = 1
 
-    def olhar_para_player(self, player):
+    def olhar_para_player(self, player): # Faz com que partes do boss apontem para o player
 
         # =========================
         # OLHO
@@ -314,7 +314,7 @@ class FinalBoss(Entity):
                 )
             ]
 
-    def shoot(self, partes_criticas, player):
+    def shoot(self, partes_criticas, player): # Cria projétil direcionado ao jogador
 
         dx = player.cx - self.cx
         dy = player.cy - self.cy
