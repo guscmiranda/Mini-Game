@@ -31,7 +31,7 @@ class AudioManager:
                 pygame.mixer.music.stop()
                 pygame.mixer.music.play(loop)
                 self.musica_atual = music_name
-                pygame.mixer.music.set_volume(0.008)
+                pygame.mixer.music.set_volume(0.8)
             except Exception as e:
                 print(f"Erro ao carregar musica {self.musics[music_name]}: {e}")
 

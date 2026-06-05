@@ -163,7 +163,7 @@ class Game:
         # --- Controle de Tempo e Transições de Fase
         self.tempo_fase += dt
 
-        if self.fase_atual == 1 and self.tempo_fase > 20:
+        if self.fase_atual == 1 and self.tempo_fase > 25:
             self.fase_atual = 2
             self.audio.play_music("fase-2")
             self.bomb_cooldown = 8
@@ -344,7 +344,6 @@ class Game:
                     # distroi projetil
                     p_proj.alive = False
                     self.final_boss.vida -= 2
-                    print("colisao projetil do player com boss")
 
 
         # player x projetil boss
@@ -355,18 +354,15 @@ class Game:
                 # distroi projetil
                 b_proj.alive = False
                 if self.player.time_since_last_damage > self.player.cooldown_damage:
-                    print("ficou invulnerável")
                     self.player.vidas -= 1
                     self.player.time_since_last_damage = 0
 
-                    print("colisao projetil com boss")
 
         # player x paredes
         for parede in self.paredes:
             for p_hitbox in parede.hitboxes:
                 if self.verificar_colisao(player_hitbox, p_hitbox):
                     if self.player.time_since_last_damage > self.player.cooldown_damage:
-                        print("COLISÃO COM A PAREDE LASER!")
                         self.player.vidas -= 1
                         self.player.time_since_last_damage = 0
 
@@ -374,7 +370,6 @@ class Game:
         for bomb in self.bombs:
             if self.verificar_colisao(player_hitbox, bomb.hitboxes[0]):
                 if self.player.time_since_last_damage > self.player.cooldown_damage:
-                    print("COLISÃO COM A BOMBA!")
                     self.player.vidas -= 1
                     self.player.time_since_last_damage = 0
                     bomb.alive = False
@@ -388,7 +383,6 @@ class Game:
                     # distroi projetil
                     p_proj.alive = False
                     bomb.alive = False
-                    print("colisao projetil do player com a bomba")
 
     def run(self):
         while self.running:

@@ -60,9 +60,9 @@ class Spaceship(Entity):
         if keys[pygame.K_d]:
             self.mover(velocidade, 0)
 
-        if keys[pygame.K_q]:
+        if keys[pygame.K_j]:
             self.rotacionar(-200*dt)
-        if keys[pygame.K_e]:
+        if keys[pygame.K_k]:
             self.rotacionar(200*dt)
 
         if keys[pygame.K_f] and not self.f_pressed:
