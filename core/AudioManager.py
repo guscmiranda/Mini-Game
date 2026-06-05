@@ -2,14 +2,23 @@ import pygame
 
 class AudioManager:
     def __init__(self):
+
+        '''
+           Classe responsável por gerenciar músicas de fundo e efeitos sonoros
+           do jogo.
+
+           Catálogo de áudios, qual música está tocando e métodos para tocar
+           ou interromper sons e músicas.
+        '''
+
         pygame.mixer.init()
 
         self.musics = {
             "fase-1": "../assets/audio/Before_The_Boss_Arrives.ogg",
             "fase-2": "../assets/audio/The_Tutorial_Had_Teeth.ogg",
             "fase-3": "../assets/audio/King_of_the_Arena.ogg",
-            "game-win": "../assets/audio/Game_Win.ogg", # Não existe
-            "game-over": "../assets/audio/Game_Over.ogg", # Não existe
+            "game-win": "../assets/audio/Game_Win.ogg", # pro futuro
+            "game-over": "../assets/audio/Game_Over.ogg", # pro futuro
         }
         self.musica_atual = None
 
@@ -24,6 +33,7 @@ class AudioManager:
 
 
     def play_music(self, music_name, loop=-1):
+        # Tocar músicas em loop
 
         if music_name in self.musics and music_name != self.musica_atual:
             try:
