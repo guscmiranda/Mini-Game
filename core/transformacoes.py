@@ -3,30 +3,16 @@ from math import sin
 import math
 
 def translacao(pontos, dx, dy):
+    ''' Função para movimentar os pontos de lugar '''
     novos = []
-    for x, y in pontos: novos.append((x + dx, y + dy))
-    return novos
-
-def escalonamento(pontos, sx, sy):
-    novos = []
-    for x, y in pontos:
-        novos.append((x * sx, y * sy))
-    return novos
-
-def rotacao_00 (pontos, theta):
-    novos = []
-
-    for x,y in pontos:
-        x_new = x * cos(theta) - y * sin(theta)
-        y_new = x * sin(theta) - y * cos(theta)
-        #xs_novos.append(x_new)
-        #ys_novos.append(y_new)
-        novos.append((x_new, y_new))
-
+    for x, y in pontos: novos.append((x + dx, y + dy)) # Soma dx e dy para movimentar
     return novos
 
 def rotacao_central(pontos, theta, dx, dy):
-
+    ''' Multiplicando as matrizes de translação para o centro
+        com a de rotação e com a de translação para a posição incial
+        obtemos as expressões para o x_new e para o y_new
+    '''
     theta = math.radians(theta)
 
     novos = []
@@ -50,6 +36,7 @@ def rotacao_central(pontos, theta, dx, dy):
 
 
 def escalonamento_central(pontos, sx, sy, cx, cy):
+    ''' Função para redimensionar os pontos'''
     novos = []
 
     for x, y in pontos:
