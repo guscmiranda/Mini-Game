@@ -26,6 +26,7 @@ def gerar_circulo_envolvente(pontos):
 
 
 class Entity:
+    ''' Tipo genérico de personagem do jogo '''
 
     def __init__(self, partes, cores, centro=(0, 0), partes_criticas=[]):
         """
@@ -39,7 +40,6 @@ class Entity:
         self.cx, self.cy = centro
         self.angulo = 0
         self.alive = True
-        #self.vidas = vida_max
 
         self.hitboxes = []
         for nome in partes_criticas:
@@ -47,13 +47,14 @@ class Entity:
                 objeto = self.partes[nome][0]
                 tipo = self.partes[nome][1]
 
+                # Cria o hitbox circular para o objeto
                 if tipo == "polygon":
                     self.hitboxes.append(gerar_circulo_envolvente(objeto))
                 elif tipo == "circle":
                     # Se já for um círculo, só copia o centro e o raio
                     self.hitboxes.append({"centro": objeto["centro"], "raio": objeto["raio"]})
 
-    def mover(self, dx, dy):
+    def mover(self, dx, dy): # faz translação de todas as partes e hitboxes
 
         for nome, parte in self.partes.items():
             objeto = parte[0]
@@ -64,16 +65,17 @@ class Entity:
 
             elif tipo == "circle":
                 centro = objeto["centro"]
-                novo_centro = translacao([centro], dx, dy)[0]
+                novo_centro = translacao([centro], dx, dy)[0] # Para o circulo basta mover o centro
                 self.partes[nome][0]["centro"] = novo_centro
 
         for hb in self.hitboxes:
             hb["centro"] = translacao([hb["centro"]], dx, dy)[0]
 
+        # Centro da Entity é atualizado
         self.cx += dx
         self.cy += dy
 
-    def rotacionar(self, angulo):
+    def rotacionar(self, angulo): # Realiza rotação com translação para não mover o objeto geograficamente
         self.angulo += angulo
         for nome, parte in self.partes.items():
 
@@ -101,7 +103,7 @@ class Entity:
 
                 self.partes[nome][0]["centro"] = novo_centro
 
-    def escalar(self, sx, sy):
+    def escalar(self, sx, sy): # Altera a escala (tamanho) da entidade + realiza translação para não mover geograficamente
 
         for nome, parte in self.partes.items():
 
@@ -137,7 +139,7 @@ class Entity:
             hb["centro"] = escalonamento_central([hb["centro"]], sx, sy, self.cx, self.cy)[0]
             hb["raio"] *= (sx + sy) / 2
 
-    def draw(self, screen, ver_hitboxes=False):
+    def draw(self, screen, ver_hitboxes=False): # desenha entidade :) E ainda tem a opção de mostrar as hitboxes.
         if not self.alive: return
 
         for nome, parte in self.partes.items():
