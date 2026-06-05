@@ -8,7 +8,6 @@ from models.final_boss import  *
 from models.spaceship import *
 # from models.boss_teste import *
 from models.parede_laser import *
-from models.background import *
 from entities.ParedeLaser import ParedeLaser
 from entities.Entity import Entity
 from core.AudioManager import AudioManager
@@ -24,41 +23,49 @@ WIDTH = 1280
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, 720))
+        self.screen = pygame.display.set_mode((WIDTH, 720)) # Cria a janela
         self.clock = pygame.time.Clock()
-        self.keys = pygame.key.get_pressed()
+        self.keys = pygame.key.get_pressed()  # Para lidar com quais botões serão pressionados
+
+        # Fontes
         self.fonte_titulo = pygame.font.SysFont('cooperblack', 100)
         self.fonte_subtitulo = pygame.font.SysFont('cooperblack', 40)
 
         self.state = GameState.IN_GAME
         self.running = True
 
+        # Mídia e Audio
         self.audio = AudioManager()
         self.background = BackgroundManager("../assets/image/dark_montains.png", "../assets/image/dark_montains_cont.png")
+
+        # Criando a nave e o boss
         self.player = Spaceship(spaceship_partes, spaceship_cores, centro=(0,0), partes_criticas=["corpo"])
         self.final_boss = FinalBoss(boss9_partes, boss9_cores, centro=(0,0), partes_criticas=["cabeca", "tronco"])
         self.final_boss.alive = False
 
+        # listas de inimigos e projéteis
         self.enemies = []
         self.p_projectiles = []
         self.b_projectiles = []
         self.paredes = []
         self.bombs = []
 
+        # Condições de vida das bombas
         self.bomb_timer = 0
         self.bomb_cooldown = 2
-        self.bombas_livres = True
 
+        # Variáveis para as fases
         self.fase_atual = 1
         self.tempo_fase = 0
 
-        # --- Variáveis de Transição
+        # Variáveis de Transição
         self.tempo_transicao = 0
         self.texto_transicao = ""
 
         self.audio.play_music("fase-1")
 
     def handle_events(self):
+        ''' Captura eventos de reinicialização do jogo e de disparos da nave'''
         self.keys = pygame.key.get_pressed()
 
         for event in pygame.event.get():
@@ -67,27 +74,25 @@ class Game:
 
             if self.state != GameState.IN_GAME:          
                 if self.keys[pygame.K_r]:
-                    #self.state = GameState.IN_GAME
+                    # reiniciar o jogo
                     self.__init__()
-
 
             if self.keys[pygame.K_SPACE] and self.state == GameState.IN_GAME:
 
                 if (
                     self.player.time_since_last_shot >
                     self.player.cooldown_tiro
-                    and self.player.isBig
+                    and self.player.isBig # O player só pode atirar se estiver grande
                 ):
-                    projectile = self.player.shoot(["corpo"])
+                    projectile = self.player.shoot(["corpo"]) # cria um novo projétil
                     self.p_projectiles.append(projectile)
-                    self.player.time_since_last_shot = 0
+                    self.player.time_since_last_shot = 0 # reseta o tempo
 
     def draw_playing(self):
-        self.screen.fill("black")
+        ''' Desenha os elementos do jogo'''
         self.background.draw(self.screen)
 
         #--- Player
-        #if self.player.alive:
         self.player.draw(self.screen)
 
         #--- Tiros do player
@@ -113,10 +118,8 @@ class Game:
         #--- Vidas do jogador
         self.draw_hud()
 
-        # chama inimidors.draw() num for de inimigos
-        # chama tiros.draw() num for de tiros ainda na tela
-
     def draw_hud(self):
+        ''' Desenha os corações do player '''
         x_inicial = 30
         y_inicial = 690
         espacamento = 50
@@ -142,8 +145,10 @@ class Game:
 
     def update_playing(self, dt):
 
-        if not self.player.alive: self.state = GameState.GAME_OVER
-        if self.fase_atual == 3 and not self.final_boss.alive: self.state = GameState.GAME_WIN
+        ''' Updates de movimento e de comportamento que ocorrem durante o jogo '''
+
+        if not self.player.alive: self.state = GameState.GAME_OVER # player morre == Game Over
+        if self.fase_atual == 3 and not self.final_boss.alive: self.state = GameState.GAME_WIN # boss morre == Game Win
 
         # --- Background
         self.background.update(dt)
@@ -163,22 +168,23 @@ class Game:
         # --- Controle de Tempo e Transições de Fase
         self.tempo_fase += dt
 
+        # --- ifs para as transições
         if self.fase_atual == 1 and self.tempo_fase > 25:
             self.fase_atual = 2
             self.audio.play_music("fase-2")
             self.bomb_cooldown = 8
             self.state = GameState.TRANSITION
             self.tempo_transicao = 2.5
-            self.texto_transicao = "AVISO: BOSS DETECTADO!"
+            self.texto_transicao = "BOSS DETECTADO!"
 
         if self.fase_atual == 2 and self.final_boss.vida <= 100:
             self.fase_atual = 3
             self.audio.play_music("fase-3")
             self.state = GameState.TRANSITION
             self.tempo_transicao = 1.2
-            self.texto_transicao = "ALERTA: PAREDES LASER ATIVADAS!"
+            self.texto_transicao = "PAREDES LASER ATIVADAS!"
 
-        # --- LÓGICA DA FASE 1 (E SUPERIORES)
+        # --- MECÂNICA DA FASE 1 (E SUPERIORES)
         if self.fase_atual >= 1:
             self.bomb_timer += dt
 
@@ -187,8 +193,7 @@ class Game:
                     bomba_partes,
                     bomba_cores,
                     (0,0),
-                    ["corpo"],
-                    self.bombas_livres
+                    ["corpo"]
                 )
                 self.bombs.append(bomb)
                 self.bomb_timer = 0
@@ -200,10 +205,9 @@ class Game:
                 bomb for bomb in self.bombs
                 if bomb.alive
             ]
-        # --- LÓGICA DA FASE 2 (E SUPERIORES)
+        # --- MECÂNICA DA FASE 2 (E SUPERIORES)
         if self.fase_atual >= 2 and self.final_boss.alive:
 
-            # self.bombas_livres = False # Só vem de tras de boss
             # --- Final Boss
             self.final_boss.update(dt, self.player)
             if self.final_boss.time_since_last_shot > self.final_boss.cd_shoot:
@@ -219,8 +223,7 @@ class Game:
             if b.alive
         ]
 
-
-        # --- LÓGICA DA FASE 3
+        # --- MECÂNICA DA FASE 3
         if self.fase_atual == 3 and self.final_boss.alive:
              self.final_boss.time_since_last_parede += dt
              self.final_boss.cd_shoot = 1 #tiros mais devagar agora q tem parede
@@ -244,7 +247,7 @@ class Game:
 
         self.paredes = [p for p in self.paredes if p.alive]
 
-        # Checa colisão
+        # Verifica colisão
         self.tratar_colisao()
 
     def update_transition(self, dt):
@@ -260,7 +263,7 @@ class Game:
             self.final_boss.time_since_last_parede = 0
 
     def draw_transition(self):
-        self.draw_playing()
+        # self.draw_playing()
 
         pelicula = pygame.Surface((WIDTH, 720), pygame.SRCALPHA)
         pelicula.fill((0, 0, 0, 160))
@@ -278,27 +281,11 @@ class Game:
         self.screen.blit(texto_sombra, rect_sombra)
         self.screen.blit(texto, rect)
 
-    def draw_game_over(self):
+    def draw_game_end(self, text, main_color, second_color):
 
         # Renderiza os textos (Texto, Antialias, Cor)
-        texto_go = self.fonte_titulo.render("GAME OVER", True, (255, 50, 50))
-        texto_sombra = self.fonte_titulo.render("GAME OVER", True, (80, 10, 10))
-        texto_restart = self.fonte_subtitulo.render("Pressione R para recomeçar", True, (255, 255, 255))
-
-        # Pega as hitboxes do texto para centralizar na tela
-        rect_go = texto_go.get_rect(center=(WIDTH / 2, 720 / 2 - 50))
-        rect_sombra = texto_sombra.get_rect(center=(WIDTH / 2 + 5, 720 / 2 - 45))
-        rect_restart = texto_restart.get_rect(center=(WIDTH / 2, 720 / 2 + 50))
-
-        # Cola os textos na tela
-        self.screen.blit(texto_sombra, rect_sombra)
-        self.screen.blit(texto_go, rect_go)
-        self.screen.blit(texto_restart, rect_restart)
-
-    def draw_game_win(self):
-        # Renderiza os textos (Texto, Antialias, Cor)
-        texto_go = self.fonte_titulo.render("GAME WIN", True, (50, 50, 250))
-        texto_sombra = self.fonte_titulo.render("GAME WIN", True, (0, 0, 128))
+        texto_go = self.fonte_titulo.render(text, True, main_color)
+        texto_sombra = self.fonte_titulo.render(text, True, second_color)
         texto_restart = self.fonte_subtitulo.render("Pressione R para recomeçar", True, (255, 255, 255))
 
         # Pega as hitboxes do texto para centralizar na tela
@@ -321,7 +308,6 @@ class Game:
 
     def tratar_colisao(self):
         # ou verifica todos os pontos da borda ou usa o métododo raio
-
 
         player_hitbox = self.player.hitboxes[0]
         boss_hitbox = self.final_boss.hitboxes
@@ -380,13 +366,13 @@ class Game:
             for bomb in self.bombs:
                 if self.verificar_colisao(p_proj_hitbox, bomb.hitboxes[0]):
                     # boss toma dano
-                    # distroi projetil
+                    # destroi projetil
                     p_proj.alive = False
                     bomb.alive = False
 
     def run(self):
         while self.running:
-            dt = self.clock.tick(60) / 1000
+            dt = self.clock.tick(60) / 1000 # Define tempo de cada frame
             self.handle_events()
 
             if self.state == GameState.IN_GAME:
@@ -394,11 +380,12 @@ class Game:
                 self.draw_playing()
             elif self.state == GameState.TRANSITION:
                 self.update_transition(dt)
+                self.draw_playing()
                 self.draw_transition()
             elif self.state == GameState.GAME_OVER:
-                self.draw_game_over()
+                self.draw_game_end("GAME OVER", (255, 50, 50), (80, 10, 10))
             elif self.state == GameState.GAME_WIN:
-                self.draw_game_win()
+                self.draw_game_end("GAME WIN", (50, 50, 250), (0, 0, 128))
 
             pygame.display.flip()
 
